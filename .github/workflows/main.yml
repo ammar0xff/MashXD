@@ -1,0 +1,9 @@
+name: Ubuntu-Latest
+on: workflow_dispatch
+jobs:
+  system:
+    runs-on: ubuntu-latest
+    steps:
+      - name: crearing the team user ..
+        run: echo " ${{secrets.blabla}} "
+
