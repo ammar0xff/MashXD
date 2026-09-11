@@ -1,4 +1,4 @@
 pyfiglet>=1.0
-termcolor>=2.0
+termcolor>=3.3.0
 rarfile>=4.0
 pefile>=2023.2.7
