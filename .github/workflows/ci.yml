@@ -58,7 +58,7 @@ jobs:
       - name: Real-dataset smoke scan + HTML report
         run: python MashXD.py -l samples/Mal-Hashes.txt -f samples/Task2.zip --html report.html
       - name: Upload HTML report artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: mashxd-html-report-${{ matrix.os }}-py${{ matrix.python-version }}
