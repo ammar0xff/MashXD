@@ -83,19 +83,12 @@ jobs:
         with:
           name: MashXD-linux-x86_64
           path: ./bin
-      - name: Compute version
-        id: ver
-        shell: bash
-        run: |
-          V="${VERSION#v}"
-          echo "value=${V}" >> "$GITHUB_OUTPUT"
-          echo "version=${V}" >> "$GITHUB_ENV"
       - name: Build .deb package
         run: |
-          chmod +x bin/MashXD
+          chmod +x bin/dist/MashXD
           mkdir -p pkg/DEBIAN pkg/usr/bin pkg/usr/share/applications \
                    pkg/usr/share/icons/hicolor/256x256/apps
-          cp bin/MashXD pkg/usr/bin/MashXD
+          cp bin/dist/MashXD pkg/usr/bin/MashXD
           cp packaging/MashXD.desktop pkg/usr/share/applications/
           cp packaging/mashxd.png pkg/usr/share/icons/hicolor/256x256/apps/
           cat > pkg/DEBIAN/control <<EOF
@@ -120,7 +113,7 @@ jobs:
           ./appimagetool.AppImage --appimage-extract >/dev/null
           mv squashfs-root appimagetool
           mkdir -p appdir/usr/bin
-          cp bin/MashXD appdir/usr/bin/MashXD
+          cp bin/dist/MashXD appdir/usr/bin/MashXD
           cp packaging/AppRun appdir/AppRun
           chmod +x appdir/AppRun
           cp packaging/MashXD.desktop appdir/
@@ -172,7 +165,7 @@ jobs:
             * `.rar` containers need the `unrar` binary (e.g. `sudo apt install unrar`).
             * Everything scans in memory - nothing is extracted to disk.
             * `--json`, `--html report.html`, and `-f <dir>` are supported.
-            * Malware samples shipped here are harmless hashes/lab exercises.
+            * Malware samples shipped here are harmless lab hashes.
           generate_release_notes: false
           files: release-assets/*
           draft: false
