@@ -53,22 +53,27 @@ jobs:
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
+          New-Item -ItemType Directory -Force -Path bundle-out | Out-Null
           Compress-Archive -Path dist/MashXD.exe, README.md, samples/Mal-Hashes.txt `
-            -DestinationPath "${{ matrix.asset }}.zip"
+            -DestinationPath "bundle-out/${{ matrix.asset }}.zip"
       - name: Package macOS zip
         if: runner.os == 'macOS'
         run: |
-          mkdir -p "bundle/${{ matrix.asset }}"
-          cp dist/MashXD "bundle/${{ matrix.asset }}/MashXD"
-          cp README.md samples/Mal-Hashes.txt "bundle/${{ matrix.asset }}/"
-          (cd bundle && zip -r "../${{ matrix.asset }}.zip" "${{ matrix.asset }}")
+          mkdir -p "bundle-out/bundle" "bundle-out/${{ matrix.asset }}"
+          cp dist/MashXD "bundle-out/${{ matrix.asset }}/MashXD"
+          cp README.md samples/Mal-Hashes.txt "bundle-out/${{ matrix.asset }}/"
+          (cd bundle-out/${{ matrix.asset }} && zip -r "../${{ matrix.asset }}.zip" .)
+          rm -rf "bundle-out/${{ matrix.asset }}" "bundle-out/bundle"
+      - name: Stage Linux binary
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p bundle-out
+          cp dist/MashXD "bundle-out/${{ matrix.asset }}"
       - name: Upload artifact (${{ matrix.os }})
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.asset }}
-          path: |
-            ${{ matrix.asset }}.zip
-            dist/MashXD${{ matrix.ext }}
+          path: bundle-out/*
           if-no-files-found: error
 
   package-linux:
@@ -85,10 +90,10 @@ jobs:
           path: ./bin
       - name: Build .deb package
         run: |
-          chmod +x bin/dist/MashXD
+          chmod +x bin/MashXD-linux-x86_64
           mkdir -p pkg/DEBIAN pkg/usr/bin pkg/usr/share/applications \
                    pkg/usr/share/icons/hicolor/256x256/apps
-          cp bin/dist/MashXD pkg/usr/bin/MashXD
+          cp bin/MashXD-linux-x86_64 pkg/usr/bin/MashXD
           cp packaging/MashXD.desktop pkg/usr/share/applications/
           cp packaging/mashxd.png pkg/usr/share/icons/hicolor/256x256/apps/
           cat > pkg/DEBIAN/control <<EOF
@@ -113,7 +118,7 @@ jobs:
           ./appimagetool.AppImage --appimage-extract >/dev/null
           mv squashfs-root appimagetool
           mkdir -p appdir/usr/bin
-          cp bin/dist/MashXD appdir/usr/bin/MashXD
+          cp bin/MashXD-linux-x86_64 appdir/usr/bin/MashXD
           cp packaging/AppRun appdir/AppRun
           chmod +x appdir/AppRun
           cp packaging/MashXD.desktop appdir/
@@ -142,7 +147,7 @@ jobs:
           path: release-assets
           merge-multiple: true
       - name: List assets
-        run: ls -la release-assets
+        run: ls -laR release-assets
       - name: Create/update GitHub Release
         uses: softprops/action-gh-release@v2
         with:
@@ -168,5 +173,3 @@ jobs:
             * Malware samples shipped here are harmless lab hashes.
           generate_release_notes: false
           files: release-assets/*
-          draft: false
-          prerelease: false
