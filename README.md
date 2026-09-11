@@ -70,6 +70,14 @@ python MashXD.py -l samples/Mal-Hashes.txt -f samples/Task2.zip --json
 5. Accumulates weighted evidence into a score and grades the file.
 6. Reports a human report, JSON, and/or a self-contained HTML page.
 
+## Downloads
+
+Prebuilt binaries are attached to every [GitHub Release](https://github.com/ammar0xff/MashXD/releases):
+an AppImage and a `.deb` (Debian/Ubuntu), a `.exe` (Windows, zipped), and a
+zipped macOS binary. CI builds and smoke-tests each artifact from the tagged
+source - nothing runs here. `.rar` containers still need the `unrar` binary on
+the machine that runs MashXD.
+
 ## Tests
 
 ```sh

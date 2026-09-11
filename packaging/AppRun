@@ -1,0 +1,6 @@
+#!/bin/sh
+# AppImage AppRun - executes the bundled PyInstaller binary.
+SELF="$(readlink -f "$0")"
+HERE="${SELF%/*}"
+export APPDIR="${HERE}"
+exec "${HERE}/usr/bin/MashXD" "$@"

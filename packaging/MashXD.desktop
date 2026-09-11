@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=MashXD
+Comment=Malware triage engine (hash lists + static analysis)
+Exec=MashXD
+Icon=mashxd
+Terminal=true
+Type=Application
+Categories=Utility;Security;
+StartupNotify=false
