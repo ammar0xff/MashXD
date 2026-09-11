@@ -422,7 +422,7 @@ def scan_path(path, signatures, max_depth, verbose):
             if not file.is_file():
                 continue
             data = file.read_bytes()
-            here = str(file.relative_to(path))
+            here = str(file.relative_to(path)).replace("\\", "/")
             evidence = evaluate(file.name, here, len(data), data, signatures)
             findings.append(evidence)
             if is_zip(data) or (is_rar(data) and rarfile is not None):
